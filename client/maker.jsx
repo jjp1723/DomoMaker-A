@@ -53,10 +53,10 @@ const DomoList = (props) => {
         return(
             <div key={domo._id} className='domo'>
                 <img src='/assets/img/domoface.jpeg' alt='domo face' className='domoFace'/>
-                <h3 className='domoName'> Name: {domo.name} </h3>
-                <h3 className='domoAge'> Age: {domo.age} </h3>
-                <h3 className='domoWeight'> Weight: {domo.weight} </h3>
-                <input className='deleteDomoSubmit' type='submit' value='Delete Domo' onSubmit={deleteDomoFromServer(domo)}/>
+                <h3 className='domoName' id='domoName'> Name: {domo.name} </h3>
+                <h3 className='domoAge' id='domoAge'> Age: {domo.age} </h3>
+                <h3 className='domoWeight' id='domoWeight'> Weight: {domo.weight} </h3>
+                <button className='deleteDomoSubmit' type='button' value='Delete Domo' onClick={() => deleteDomoFromServer(domo)}>Delete Domo</button>
             </div>
         );
     });
@@ -75,8 +75,10 @@ const loadDomosFromServer = async () => {
 };
 
 const deleteDomoFromServer = async (domo) => {
-    await fetch('/deleteDomo');
-    loadDomosFromServer();
+    const response = await fetch('/deleteDomo', {method: 'DELETE', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(domo)});
+    if(response.status === 201){
+        loadDomosFromServer();
+    }
 }
 
 const init = () => {

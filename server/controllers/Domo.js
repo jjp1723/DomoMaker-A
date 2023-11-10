@@ -41,9 +41,10 @@ const getDomos = async (req, res) => {
   }
 };
 
-const deleteDomo = async (req, res, domo) => {
+const deleteDomo = async (req, res) => {
   try {
-    await Domo.findByIdAndDelete({_id:domo._id});
+    const deleted = await Domo.findByIdAndDelete({_id:req.body._id});
+    return res.status(201).json({deleted});
   } catch (err) {
     console.log(err);
     return res.status(500).json({error:'Error deleting domo!'});
