@@ -8,13 +8,14 @@ const handleDomo = (e) => {
 
     const name = e.target.querySelector('#domoName').value;
     const age = e.target.querySelector('#domoAge').value;
+    const weight = e.target.querySelector('#domoWeight').value;
 
-    if(!name || !age){
+    if(!name || !age || !weight){
         helper.handleError('All fields are required!');
         return false;
     }
 
-    helper.sendPost(e.target.action, {name, age}, loadDomosFromServer);
+    helper.sendPost(e.target.action, {name, age, weight}, loadDomosFromServer);
 
     return false;
 };
@@ -32,6 +33,8 @@ const DomoForm = (props) => {
             <input id='domoName' type='text' name='name' placeholder='Domo Name'/>
             <label htmlFor='age'>Age: </label>
             <input id='domoAge' type='number' min='0' name='age'/>
+            <label htmlFor='weight'>Weight: </label>
+            <input id='domoWeight' type='number' min='0' name='weight'/>
             <input className='makeDomoSubmit' type='submit' value='Make Domo'/>
         </form>
     );
@@ -52,6 +55,8 @@ const DomoList = (props) => {
                 <img src='/assets/img/domoface.jpeg' alt='domo face' className='domoFace'/>
                 <h3 className='domoName'> Name: {domo.name} </h3>
                 <h3 className='domoAge'> Age: {domo.age} </h3>
+                <h3 className='domoWeight'> Weight: {domo.weight} </h3>
+                <input className='deleteDomoSubmit' type='submit' value='Delete Domo' onSubmit={deleteDomoFromServer(domo)}/>
             </div>
         );
     });
@@ -68,6 +73,11 @@ const loadDomosFromServer = async () => {
     const data = await response.json();
     ReactDOM.render(<DomoList domos={data.domos}/>, document.getElementById('domos'));
 };
+
+const deleteDomoFromServer = async (domo) => {
+    await fetch('/deleteDomo');
+    loadDomosFromServer();
+}
 
 const init = () => {
     ReactDOM.render(<DomoForm/>, document.getElementById('makeDomo'));
